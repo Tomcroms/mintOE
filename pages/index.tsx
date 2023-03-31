@@ -3,7 +3,6 @@ import { RelayProvider } from "@opengsn/provider";
 import Image from "next/image";
 import style from "../styles/style.module.css";
 import type { NextPage } from "next";
-import React from "react";
 
 
 declare const window: any;
@@ -584,6 +583,17 @@ const ERC1155_contract_abi = [
 
 
 const Home: NextPage = () =>{
+	class WrappedRelayProvider extends RelayProvider implements ethers.providers.ExternalProvider {
+
+		send(request: { method: string, params?: Array<any> }, callback: (error: any, response: any) => void | undefined): void {
+			super.send({
+				jsonrpc: '2.0',
+				method: request.method,
+				params: request.params ?? []
+			}, callback)
+		}
+	
+	}
 	const connect = async () => {
 		if(typeof window !== "undefined" && window.ethereum){
 			handleConnectWallet();
@@ -610,7 +620,7 @@ const Home: NextPage = () =>{
 			const walletAddress = accounts[0];
 		
 			const isAuthorized = await checkQuestDone(walletAddress);
-			if (isAuthorized) {
+			if (!isAuthorized) {
 				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
 				const gsnConfig = {
 					paymasterAddress: "0x8E61E4027A85dB1884778aFF470B5Fb429e4E765",
@@ -622,11 +632,11 @@ const Home: NextPage = () =>{
 				const gsnProvider = await RelayProvider.newProvider({
 					provider: baseProvider,
 					config: gsnConfig,
-				});
+				}) as WrappedRelayProvider;
 		
 				await gsnProvider.init()
 		
-				const etherProvider = new ethers.providers.Web3Provider(gsnProvider)
+				const etherProvider = new ethers.providers.Web3Provider(gsnProvider) ;
 		
 				const signer = etherProvider.getSigner();
 				const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
