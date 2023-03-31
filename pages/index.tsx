@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { RelayProvider } from "@opengsn/provider";
 import Image from "next/image";
 import style from "../styles/style.module.css";
+import type { NextPage } from "next";
 import React from "react";
 
 
