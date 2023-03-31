@@ -593,7 +593,7 @@ const Home: NextPage = () =>{
 		}
 	}
   	  //verification depuis la bdd
-	async function checkQuestDone(walletAddress) {
+	async function checkQuestDone(walletAddress: string) {
 		const response = await fetch('/api/check-quest', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
