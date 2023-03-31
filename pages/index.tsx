@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { RelayProvider } from "@opengsn/provider";
 import Image from "next/image";
 import style from "../styles/style.module.css";
+import React from "react";
 
 
 const ERC1155_contract_address = "0x4fA00f8B9249a55f755213fcD32a5BF8D7528E61";
@@ -580,50 +581,76 @@ const ERC1155_contract_abi = [
 
 
 const Home: NextPage = () =>{
-  const connect = async () => {
-    if(typeof window !== "undefined" && window.ethereum){
-      const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
-      let accounts = await baseProvider.send("eth_requestAccounts", []);
- 
-      const gsnConfig = {
-        paymasterAddress: "0x8E61E4027A85dB1884778aFF470B5Fb429e4E765",
-        // maxFeePerGas: ethers.utils.parseUnits("5", "gwei").toString(),
-        // maxPriorityFeePerGas: ethers.utils.parseUnits("2", "gwei").toString(),
-        // gasLimit: 210000,
-      };
+	const connect = async () => {
+		if(typeof window !== "undefined" && window.ethereum){
+			handleConnectWallet();
+		}
+		else{
+			console.log("install metamask");
+		}
+	}
+  	  //verification depuis la bdd
+	async function checkQuestDone(walletAddress) {
+		const response = await fetch('/api/check-quest', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ walletAddress }),
+		});
+		
+		const data = await response.json();
+		return data.authorized;
+	}
 
-      const gsnProvider = await RelayProvider.newProvider({
-        provider: baseProvider,
-        config: gsnConfig,
-      });
+	async function handleConnectWallet() {
+		try {
+			const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+			const walletAddress = accounts[0];
+		
+			const isAuthorized = await checkQuestDone(walletAddress);
+			if (isAuthorized) {
+				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
+				const gsnConfig = {
+					paymasterAddress: "0x8E61E4027A85dB1884778aFF470B5Fb429e4E765",
+					// maxFeePerGas: ethers.utils.parseUnits("5", "gwei").toString(),
+					// maxPriorityFeePerGas: ethers.utils.parseUnits("2", "gwei").toString(),
+					// gasLimit: 210000,
+				};
+		
+				const gsnProvider = await RelayProvider.newProvider({
+					provider: baseProvider,
+					config: gsnConfig,
+				});
+		
+				await gsnProvider.init()
+		
+				const etherProvider = new ethers.providers.Web3Provider(gsnProvider)
+		
+				const signer = etherProvider.getSigner();
+				const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
+		
+				const mintTx = await myContract.mintFreeToken(accounts[0]);
+				console.log("done:", mintTx)
+			}
+			else {
+				console.log("Pas autorisé");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
-      await gsnProvider.init()
-
-      const etherProvider = new ethers.providers.Web3Provider(gsnProvider)
-
-      const signer = etherProvider.getSigner();
-      const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
-
-      const mintTx = await myContract.mintFreeToken(accounts[0]);
-      console.log("done:", mintTx)
-    }
-    else{
-      console.log("Please install metamask");
-    }
-  }
-
-
-  return (
-	<>
-		<Image className={style.imageTitle} src="/img/artSense_x_Speedy.png" width={525} height={95} alt="artSense x Speedy"/>
-		<div className={style.flex}>
-			<div className={style.mintBtn}>
-				<h6>Mint now</h6>
+	return (
+		<>
+			<Image className={style.imageTitle} src="/img/artSense_x_Speedy.png" width={525} height={95} alt="artSense x Speedy"/>
+			<div className={style.flex}>
+				<div className={style.mintBtn}>
+					<h6>Mint now</h6>
+				</div>
+				<Image className={style.imageOE} src="/img/openEdition.gif" width={300} height={300} alt="open edition"/>
 			</div>
-			<Image className={style.imageOE} src="/img/openEdition.gif" width={300} height={300} alt="open edition"/>
-		</div>
-	</>
-  )
+			<button onClick={handleConnectWallet}>Click to connect</button>
+		</>
+	)
 } 
 
 export default Home;
