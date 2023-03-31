@@ -6,6 +6,8 @@ import type { NextPage } from "next";
 import React from "react";
 
 
+declare const window: any;
+
 const ERC1155_contract_address = "0x4fA00f8B9249a55f755213fcD32a5BF8D7528E61";
 const ERC1155_contract_abi = [
 	{
