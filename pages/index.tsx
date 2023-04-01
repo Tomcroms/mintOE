@@ -3,17 +3,18 @@ import { RelayProvider } from "@opengsn/provider";
 import Image from "next/image";
 import style from "../styles/style.module.css";
 import type { NextPage } from "next";
+import { useState, useEffect } from 'react';
 
 
 declare const window: any;
 
-const ERC1155_contract_address = "0x4fA00f8B9249a55f755213fcD32a5BF8D7528E61";
+const ERC1155_contract_address = "0xE99F08c4823952E92056D2cf50f2ba86c154f160";
 const ERC1155_contract_abi = [
 	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "forwarder",
+				"name": "_forwarder",
 				"type": "address"
 			}
 		],
@@ -46,6 +47,64 @@ const ERC1155_contract_abi = [
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "mint",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "ids",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "amounts",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			}
+		],
+		"name": "mintBatch",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "mintFreeToken",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -65,6 +124,13 @@ const ERC1155_contract_abi = [
 		"type": "event"
 	},
 	{
+		"inputs": [],
+		"name": "pause",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -76,6 +142,110 @@ const ERC1155_contract_abi = [
 		],
 		"name": "Paused",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "ids",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "amounts",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			}
+		],
+		"name": "safeBatchTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			}
+		],
+		"name": "safeTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "approved",
+				"type": "bool"
+			}
+		],
+		"name": "setApprovalForAll",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "newuri",
+				"type": "string"
+			}
+		],
+		"name": "setURI",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -115,6 +285,19 @@ const ERC1155_contract_abi = [
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -150,6 +333,13 @@ const ERC1155_contract_abi = [
 		],
 		"name": "TransferSingle",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "unpause",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -307,65 +497,6 @@ const ERC1155_contract_abi = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "mint",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "ids",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "amounts",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "bytes",
-				"name": "data",
-				"type": "bytes"
-			}
-		],
-		"name": "mintBatch",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			}
-		],
-		"name": "mintFreeToken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "name",
 		"outputs": [
@@ -393,13 +524,6 @@ const ERC1155_contract_abi = [
 	},
 	{
 		"inputs": [],
-		"name": "pause",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "paused",
 		"outputs": [
 			{
@@ -409,97 +533,6 @@ const ERC1155_contract_abi = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "ids",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "amounts",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "bytes",
-				"name": "data",
-				"type": "bytes"
-			}
-		],
-		"name": "safeBatchTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "data",
-				"type": "bytes"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "approved",
-				"type": "bool"
-			}
-		],
-		"name": "setApprovalForAll",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -522,6 +555,19 @@ const ERC1155_contract_abi = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "symbol",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -538,26 +584,6 @@ const ERC1155_contract_abi = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "unpause",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -616,6 +642,7 @@ const Home: NextPage = () =>{
 
 	async function handleConnectWallet() {
 		try {
+			setMintInitiated(true);
 			const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 			const walletAddress = accounts[0];
 		
@@ -623,7 +650,7 @@ const Home: NextPage = () =>{
 			if (!isAuthorized) {
 				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
 				const gsnConfig = {
-					paymasterAddress: "0x8E61E4027A85dB1884778aFF470B5Fb429e4E765",
+					paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
 					// maxFeePerGas: ethers.utils.parseUnits("5", "gwei").toString(),
 					// maxPriorityFeePerGas: ethers.utils.parseUnits("2", "gwei").toString(),
 					// gasLimit: 210000,
@@ -641,7 +668,7 @@ const Home: NextPage = () =>{
 				const signer = etherProvider.getSigner();
 				const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
 		
-				const mintTx = await myContract.mintFreeToken(accounts[0]);
+				const mintTx = await myContract.mintFreeToken();
 				console.log("done:", mintTx)
 			}
 			else {
@@ -652,17 +679,75 @@ const Home: NextPage = () =>{
 		}
 	}
 
+
+	//récupérer totalSupply()
+	const [totalSupply, setTotalSupply] = useState(null);
+
+	useEffect(() => {
+	  async function fetchTotalSupply() {
+		if (typeof window.ethereum !== 'undefined') {
+		  const provider = new ethers.providers.Web3Provider(window.ethereum);
+		  const contract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, provider);
+		  const totalSupply = await contract.totalSupply(0);
+		  setTotalSupply(totalSupply.toString());
+		}
+	  }
+	  fetchTotalSupply();
+	}, []);
+
+	const [mintInitiated, setMintInitiated] = useState(false);
+	// function handleMintInitiated() {
+	// 	setMintInitiated(true);
+	// }
+
+
 	return (
-		<>
-			<Image className={style.imageTitle} src="/img/artSense_x_Speedy.png" width={525} height={95} alt="artSense x Speedy"/>
-			<div className={style.flex}>
-				<div className={style.mintBtn}>
-					<h6>Mint now</h6>
+		<main className={style.mainContainer}>
+			<section className={style.left}>
+				<h2>The Key to Speedy's Mona Lisa Collection</h2>
+				<h4>by Speedy Graphito</h4>
+				<p className={style.pDescription}>Enter the vibrant world of Speedy Graphito, recognised as the French street art pioneer. Own a dynamic animated digital artwork, granting access to his Mona Lisa art collection. Let the NFT be your key to the dynamic universe of Speedy Graphito's art.</p>
+				<div className={style.blocInfo}>
+					<h3>OPEN EDITION</h3>
 				</div>
-				<Image className={style.imageOE} src="/img/openEdition.gif" width={300} height={300} alt="open edition"/>
-			</div>
-			<button onClick={handleConnectWallet}>Click to connect</button>
-		</>
+				<div className={style.blocInfo}>
+					<div className={style.info}>
+						<p className={style.pInfo}>Price</p>
+						<h3>Free Aidrop</h3>
+					</div>
+					<div className={style.info}>
+						<p className={style.pInfo}>Total Minted</p>
+						<h3>{totalSupply === null ? "Loading..." : totalSupply}</h3>
+					</div>
+				</div>
+				<div className={style.btnClaim} onClick={handleConnectWallet}>
+					<h3>Claim Now</h3>
+				</div>
+				<div className={style.blocTokenInfo}>
+					<div className={style.tokenInfo}>
+						<p className={style.pGrey}>TOKEN STANDARD</p>
+						<p>ERC-1155</p>
+					</div>
+					<div className={style.tokenInfo}>
+						<p className={style.pGrey}>BLOCKCHAIN</p>
+						<p>POLYGON</p>
+					</div>
+					<div className={style.tokenInfo}>
+						<p className={style.pGrey}>CONTRACT ADDRESS</p>
+						<p>0xE99...c154f160</p>
+					</div>
+				</div>
+			</section>
+			<section className={style.right}>
+				<Image className={!mintInitiated ? style.imageOE : style.imageOE_small} src="/img/openEdition.gif" width={300} height={300} alt="open edition"/>
+				{mintInitiated ? (
+					<div className={style.transactionContainer}>
+						<h3>Please accept metamask request, your transaction should take a few seconds</h3>
+					</div>
+				) : null}
+			</section>
+			
+		</main>
 	)
 } 
 

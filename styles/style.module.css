@@ -1,31 +1,119 @@
-.test{
-    height: 300px;
-    width: 300px;
-    background-color: red;
-}
-
 .flex{
     display: flex;
     align-items: center;
 }
 
-.mintBtn{
-    width: 200px;
-    height: 80px;
-    border-radius: 20px;
-    background-color: blue;
-    margin-right: 30px;
+
+.mainContainer{
     display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    align-items: stretch;
+    justify-content: space-between;
+    width: 60%;
+    min-width: 1100px;
 }
 
+/* left */
 
-.imageTitle{
+.left{
+    width: 42%;
+}
+.pDescription{
     margin-bottom: 30px;
 }
+.blocInfo{
+    width: 100%;
+    border-style: none none solid none;
+    border-color: #F3F3F4;
+    border-width: 1px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+}
+.blocInfo .info{
+    width: 50%;
+}
+.blocInfo .info .pInfo{
+    color: #9E9CAE;
+    margin-bottom: 3px;
+}
+
+
+.btnClaim{
+    background-color: #F3F3F4;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    cursor: pointer;
+    margin-bottom: 30px;
+    transition: all 0.35s ease;
+}
+.btnClaim:hover{
+    transform: scale(105%);
+}
+.btnClaim h3{
+    height: min-content;
+    color: transparent;
+    background-image: linear-gradient(to right, #8763dd , #43d5ae);  
+    background-clip: text;
+    -webkit-background-clip: text;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.blocTokenInfo{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.blocTokenInfo .tokenInfo{
+    padding: 5px;
+    width: calc(50% - 4px);
+    border: solid;
+    border-color: #9E9CAE;
+    border-width: 1px;
+    margin-bottom: 8px;
+}
+.blocTokenInfo .tokenInfo p{
+    font-size: 12px;
+}
+.blocTokenInfo .tokenInfo .pGrey{
+    color: #9E9CAE;
+    margin-bottom: 6px;
+}
+
+
+
+/* right */
+
+.right{
+    width: 54%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
 
 .imageOE{
-    border-radius: 20px;
+    width: 100%;
+    height: auto;
+    transition: all 0.35s ease;
+}
+
+.imageOE_small{
+    transition: all 0.35s ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%,0);
+    height: auto;
+    width: 30%;
+    border-radius: 10px;
+}
+
+.transactionContainer{
+    width: 80%;
 }
