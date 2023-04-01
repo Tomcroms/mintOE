@@ -706,7 +706,7 @@ const Home: NextPage = () =>{
 			<section className={style.left}>
 				<h2>The Key to Speedy&apos;s Mona Lisa Collection</h2>
 				<h4>by Speedy Graphito</h4>
-				<p className={style.pDescription}>Enter the vibrant world of Speedy Graphito, recognised as the French street art pioneer. Own a dynamic animated digital artwork, granting access to his Mona Lisa art collection. Let the NFT be your key to the dynamic universe of Speedy Graphito's art.</p>
+				<p className={style.pDescription}>Enter the vibrant world of Speedy Graphito, recognised as the French street art pioneer. Own a dynamic animated digital artwork, granting access to his Mona Lisa art collection. Let the NFT be your key to the dynamic universe of Speedy Graphito&apos;s art.</p>
 				<div className={style.blocInfo}>
 					<h3>OPEN EDITION</h3>
 				</div>
