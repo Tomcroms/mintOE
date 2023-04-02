@@ -768,11 +768,11 @@ const Home: NextPage = () =>{
 				<div className={style.blocInfo}>
 					<div className={style.info}>
 						<p className={style.pInfo}>Price</p>
-						<h3>Free Aidrop</h3>
+						<h4>Free Aidrop</h4>
 					</div>
 					<div className={style.info}>
 						<p className={style.pInfo}>Total Minted</p>
-						<h3>{totalSupply === null ? "Please switch to polygon" : totalSupply}</h3>
+						<h4>{totalSupply === null ? "Loading..." : totalSupply}</h4>
 					</div>
 				</div>
 				<div className={style.btnClaim} onClick={switchToPolygon}>

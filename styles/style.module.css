@@ -36,6 +36,9 @@
     color: #9E9CAE;
     margin-bottom: 3px;
 }
+.blocInfo .info h4{
+    margin-bottom: 12px;
+}
 
 
 .btnClaim{
