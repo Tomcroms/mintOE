@@ -621,12 +621,12 @@ const Home: NextPage = () =>{
 		}
 	
 	}
-	const connect = async () => {
+	const tryHandleMintRequest = async () => {
 		if(typeof window !== "undefined" && window.ethereum){
-			handleConnectWallet();
+			handleMintRequest();
 		}
 		else{
-			console.log("install metamask");
+			alert("Unable to find metamask, please make sur you have metamask installed on your current browser.");
 		}
 	}
   	  //verification depuis la bdd
@@ -780,7 +780,7 @@ const Home: NextPage = () =>{
 						<h4>{totalSupply === null ? "Loading..." : totalSupply}</h4>
 					</div>
 				</div>
-				<div className={style.btnClaim} onClick={handleMintRequest}>
+				<div className={style.btnClaim} onClick={tryHandleMintRequest}>
 					<h3>Claim Now</h3>
 				</div>
 				<div className={style.blocTokenInfo}>
