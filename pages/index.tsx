@@ -642,12 +642,13 @@ const Home: NextPage = () =>{
 
 	async function handleConnectWallet() {
 		try {
-			setMintInitiated(true);
 			const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 			const walletAddress = accounts[0];
 		
 			const isAuthorized = await checkQuestDone(walletAddress);
-			if (!isAuthorized) {
+			if (isAuthorized) {
+				setMintInitiated(true);
+				setChallengeCompleted(true);
 				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
 				const gsnConfig = {
 					paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
@@ -672,9 +673,10 @@ const Home: NextPage = () =>{
 				console.log("done:", mintTx)
 			}
 			else {
-				console.log("Pas autorisé");
+				setMintInitiated(true);
 			}
-		} catch (error) {
+		} 
+		catch (error) {
 			console.log(error);
 		}
 	}
@@ -696,9 +698,7 @@ const Home: NextPage = () =>{
 	}, []);
 
 	const [mintInitiated, setMintInitiated] = useState(false);
-	// function handleMintInitiated() {
-	// 	setMintInitiated(true);
-	// }
+	const [challengeCompleted, setChallengeCompleted] = useState(false);
 
 
 	return (
@@ -741,9 +741,15 @@ const Home: NextPage = () =>{
 			<section className={style.right}>
 				<Image className={!mintInitiated ? style.imageOE : style.imageOE_small} src="/img/openEdition.gif" width={300} height={300} alt="open edition"/>
 				{mintInitiated ? (
-					<div className={style.transactionContainer}>
-						<h3>Please accept metamask request, your transaction should take a few seconds</h3>
-					</div>
+					challengeCompleted ? (
+						<div className={style.transactionContainer}>
+							<h3>Please accept metamask request, your transaction should take a few seconds</h3>
+						</div>
+					) : (
+						<div className={style.transactionContainer}>
+							<h3>You must have completed the challenge first.</h3>
+						</div>
+					)
 				) : null}
 			</section>
 			
