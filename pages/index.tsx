@@ -4,6 +4,7 @@ import Image from "next/image";
 import style from "../styles/style.module.css";
 import type { NextPage } from "next";
 import { useState, useEffect } from 'react';
+import confetti from "canvas-confetti";
 
 
 declare const window: any;
@@ -650,6 +651,9 @@ const Home: NextPage = () =>{
 				setMintInitiated(true);
 				setChallengeCompleted(true);
 				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
+				//changer de réseau
+				switchToPolygon();
+
 				const gsnConfig = {
 					paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
 					// maxFeePerGas: ethers.utils.parseUnits("5", "gwei").toString(),
@@ -669,8 +673,11 @@ const Home: NextPage = () =>{
 				const signer = etherProvider.getSigner();
 				const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
 		
-				const mintTx = await myContract.mintFreeToken();
-				console.log("done:", mintTx)
+				const transaction = await myContract.mintFreeToken();
+				//gérer transaction
+
+				await transaction.wait();
+				//rediriger vers art-sense.studio --> hasMinted dans la bdd
 			}
 			else {
 				setMintInitiated(true);
@@ -681,19 +688,67 @@ const Home: NextPage = () =>{
 		}
 	}
 
+	async function switchToPolygon(){
+		try{
+			await window.ethereum.request({
+				method: 'wallet_switchEthereumChain',
+				params: [{ chainId: '0x89' }],
+			});
+		} catch(switchError){
+			//l'utilisateur n'a pas polygon sur metamask
+			if (switchError.code === 4902) {
+				try {
+				  // Ajoute le réseau Polygon à MetaMask et passe à ce réseau
+					const result = await window.ethereum.request({
+						method: "wallet_addEthereumChain",
+						params: [{
+						chainId: "0x89",
+						rpcUrls: ["https://polygon-rpc.com/"],
+						chainName: "Matic Mainnet",
+						nativeCurrency: {
+							name: "MATIC",
+							symbol: "MATIC",
+							decimals: 18
+						},
+						blockExplorerUrls: ["https://polygonscan.com/"]
+						}]
+					});
+				} catch (addError) {
+				  console.error("Erreur lors de l'ajout du réseau Polygon:", addError);
+				}
+			}else {
+				console.error("Erreur lors du passage au réseau Polygon:",switchError);
+			}
+		}
+	}
 
 	//récupérer totalSupply()
 	const [totalSupply, setTotalSupply] = useState(null);
 
 	useEffect(() => {
-	  async function fetchTotalSupply() {
-		if (typeof window.ethereum !== 'undefined') {
-		  const provider = new ethers.providers.Web3Provider(window.ethereum);
-		  const contract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, provider);
-		  const totalSupply = await contract.totalSupply(0);
-		  setTotalSupply(totalSupply.toString());
+	  function displayConfettis() {
+		for(let i=0; i<Math.floor(Math.random()*(25-10) + 10); i++){
+			confetti({
+				origin: {
+					x: Math.random() * (0.95 - 0.05) + 0.05,
+					y: Math.random() * (0.9 - 0.2) + 0.2
+				}
+			}); 
 		}
 	  }
+	  async function fetchTotalSupply() {
+		if (typeof window.ethereum !== 'undefined') {
+			try{
+				const provider = new ethers.providers.Web3Provider(window.ethereum);
+				const contract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, provider);
+				const totalSupply = await contract.totalSupply(0);
+				setTotalSupply(totalSupply.toString());
+			}catch(error){
+				console.error(error);
+			}
+		}
+	  }
+	  displayConfettis();
 	  fetchTotalSupply();
 	}, []);
 
@@ -717,10 +772,10 @@ const Home: NextPage = () =>{
 					</div>
 					<div className={style.info}>
 						<p className={style.pInfo}>Total Minted</p>
-						<h3>{totalSupply === null ? "Loading..." : totalSupply}</h3>
+						<h3>{totalSupply === null ? "Please switch to polygon" : totalSupply}</h3>
 					</div>
 				</div>
-				<div className={style.btnClaim} onClick={handleConnectWallet}>
+				<div className={style.btnClaim} onClick={switchToPolygon}>
 					<h3>Claim Now</h3>
 				</div>
 				<div className={style.blocTokenInfo}>
