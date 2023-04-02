@@ -626,7 +626,7 @@ const Home: NextPage = () =>{
 			handleMintRequest();
 		}
 		else{
-			alert("Unable to find metamask, please make sur you have metamask installed on your current browser.");
+			alert("Unable to find metamask, please make sure you have metamask installed on your current browser.");
 		}
 	}
   	  //verification depuis la bdd
@@ -678,7 +678,7 @@ const Home: NextPage = () =>{
 
 				await transaction.wait();
 				//rediriger vers art-sense.studio --> hasMinted dans la bdd
-				window.location.assign("https://art-sense.studio/actions/oeMinted.php");
+				window.location.assign("https://art-sense.studio/actions/hasMinted.php");
 			}
 			else {
 				setMintInitiated(true);
@@ -803,11 +803,13 @@ const Home: NextPage = () =>{
 				{mintInitiated ? (
 					challengeCompleted ? (
 						<div className={style.transactionContainer}>
-							<h3>Please accept metamask request, your transaction should take a few seconds</h3>
+							<h3>Please accept metamask request</h3>
+							<h3>Once the transaction is completed, you will be redirected, it may take up to a minute or two.</h3>
 						</div>
 					) : (
 						<div className={style.transactionContainer}>
 							<h3>You must have completed the challenge first.</h3>
+							<h3>Please make sure you are connected with the account associated with your ArtSense profile</h3>
 							<a href="https://art-sense.studio/challenge_speedy.php">Take me there</a>
 						</div>
 					)
