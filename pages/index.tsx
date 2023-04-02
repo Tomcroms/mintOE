@@ -689,6 +689,9 @@ const Home: NextPage = () =>{
 	}
 
 	async function switchToPolygon(){
+		interface CustomError extends Error {
+			code?: number;
+		}
 		try{
 			await window.ethereum.request({
 				method: 'wallet_switchEthereumChain',
@@ -696,7 +699,8 @@ const Home: NextPage = () =>{
 			});
 		} catch(switchError){
 			//l'utilisateur n'a pas polygon sur metamask
-			if (switchError.code === 4902) {
+			const error = switchError as CustomError;
+			if (error.code === 4902) {
 				try {
 				  // Ajoute le réseau Polygon à MetaMask et passe à ce réseau
 					const result = await window.ethereum.request({
