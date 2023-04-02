@@ -641,7 +641,7 @@ const Home: NextPage = () =>{
 		return data.authorized;
 	}
 
-	async function handleConnectWallet() {
+	async function handleMintRequest() {
 		try {
 			const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 			const walletAddress = accounts[0];
@@ -678,6 +678,7 @@ const Home: NextPage = () =>{
 
 				await transaction.wait();
 				//rediriger vers art-sense.studio --> hasMinted dans la bdd
+				window.location.assign("https://art-sense.studio/actions/oeMinted.php");
 			}
 			else {
 				setMintInitiated(true);
@@ -779,7 +780,7 @@ const Home: NextPage = () =>{
 						<h4>{totalSupply === null ? "Loading..." : totalSupply}</h4>
 					</div>
 				</div>
-				<div className={style.btnClaim} onClick={switchToPolygon}>
+				<div className={style.btnClaim} onClick={handleMintRequest}>
 					<h3>Claim Now</h3>
 				</div>
 				<div className={style.blocTokenInfo}>
@@ -807,6 +808,7 @@ const Home: NextPage = () =>{
 					) : (
 						<div className={style.transactionContainer}>
 							<h3>You must have completed the challenge first.</h3>
+							<a href="https://art-sense.studio/challenge_speedy.php">Take me there</a>
 						</div>
 					)
 				) : null}
