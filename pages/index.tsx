@@ -721,7 +721,7 @@ const Home: NextPage = () =>{
 				  console.error("Erreur lors de l'ajout du réseau Polygon:", addError);
 				}
 			}else {
-				console.error("Erreur lors du passage au réseau Polygon:",switchError);
+				console.error("Erreur lors du passage au réseau Polygon:",error);
 			}
 		}
 	}
