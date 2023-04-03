@@ -654,6 +654,7 @@ const Home: NextPage = () =>{
 				//changer de réseau
 				switchToPolygon();
 
+				setNetworkIsPolygon(true);
 				const gsnConfig = {
 					paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
 					// maxFeePerGas: ethers.utils.parseUnits("5", "gwei").toString(),
@@ -671,10 +672,11 @@ const Home: NextPage = () =>{
 				const etherProvider = new ethers.providers.Web3Provider(gsnProvider) ;
 		
 				const signer = etherProvider.getSigner();
+				setRelayAccepted(true);
+
 				const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
 		
 				const transaction = await myContract.mintFreeToken();
-				//gérer transaction
 
 				await transaction.wait();
 				//rediriger vers art-sense.studio --> hasMinted dans la bdd
@@ -726,6 +728,9 @@ const Home: NextPage = () =>{
 			}
 		}
 	}
+	function redirectToChallenge(){
+		window.location.assign("https://art-sense.studio/challenge_speedy.php");
+	}
 
 	//récupérer totalSupply()
 	const [totalSupply, setTotalSupply] = useState(null);
@@ -759,7 +764,115 @@ const Home: NextPage = () =>{
 
 	const [mintInitiated, setMintInitiated] = useState(false);
 	const [challengeCompleted, setChallengeCompleted] = useState(false);
-
+	const [networkIsPolygon, setNetworkIsPolygon] = useState(false);
+	const [relayAccepted, setRelayAccepted] = useState(false);
+	let content;
+	if (mintInitiated) {
+		if (challengeCompleted) {
+		  if (networkIsPolygon) {
+			if (relayAccepted) {
+			  content = (
+				<div className={style.transactionContainer}>
+					<div className={style.transactionProgress}>
+						<div className={style.transactionStep}>
+							<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
+							<h5 className={style.transactionStepTxt}>Claim your token</h5>
+						</div>
+						<div className={style.transactionLineDone}></div>
+						<div className={style.transactionStep}>
+							<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
+							<h5 className={style.transactionStepTxt}>Switch to polygon network</h5>
+						</div>
+						<div className={style.transactionLineDone}></div>
+						<div className={style.transactionStep}>
+							<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
+							<h5 className={style.transactionStepTxt}>Accept relay request</h5>
+						</div>
+						<div className={style.transactionLineDone}></div>
+						<div className={style.transactionStep}>
+							<Image className={style.stepValidate} src="/img/spinner.gif" width={20} height={20} alt="ok"/>
+							<h5 className={style.transactionStepTxt}>Wait for transaction</h5>
+						</div>
+						<div className={style.transactionLineNext}></div>                                 
+						<div className={style.transactionStep}>
+							<h5 className={style.transactionStepTxt}>Done</h5>
+						</div>
+					</div>
+				</div>
+			  );
+			} else {
+			  content = (
+				<div className={style.transactionContainer}>
+					<div className={style.transactionProgress}>
+						<div className={style.transactionStep}>
+							<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
+							<h5 className={style.transactionStepTxt}>Claim your token</h5>
+						</div>
+						<div className={style.transactionLineDone}></div>
+						<div className={style.transactionStep}>
+							<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
+							<h5 className={style.transactionStepTxt}>Switch to polygon network</h5>
+						</div>
+						<div className={style.transactionLineDone}></div>
+						<div className={style.transactionStep}>
+							<Image className={style.stepValidate} src="/img/spinner.gif" width={20} height={20} alt="ok"/>
+							<h5 className={style.transactionStepTxt}>Accept relay request</h5>
+						</div>
+						<div className={style.transactionLineNext}></div>
+						<div className={style.transactionStep}>
+							<h5 className={style.transactionStepTxt}>Wait for transaction</h5>
+						</div>
+						<div className={style.transactionLineNext}></div>                                 
+						<div className={style.transactionStep}>
+							<h5 className={style.transactionStepTxt}>Done</h5>
+						</div>
+					</div>
+				</div>
+			  );
+			}
+		  } else {
+			content = (
+			  <div className={style.transactionContainer}>
+				<div className={style.transactionProgress}>
+					<div className={style.transactionStep}>
+						<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
+						<h5 className={style.transactionStepTxt}>Claim your token</h5>
+					</div>
+					<div className={style.transactionLineDone}></div>
+					<div className={style.transactionStep}>
+						<Image className={style.stepValidate} src="/img/spinner.gif" width={20} height={20} alt="ok"/>
+						<h5 className={style.transactionStepTxt}>Switch to polygon network</h5>
+					</div>
+					<div className={style.transactionLineNext}></div>
+					<div className={style.transactionStep}>
+						<h5 className={style.transactionStepTxt}>Accept relay request</h5>
+					</div>
+					<div className={style.transactionLineNext}></div>
+					<div className={style.transactionStep}>
+						<h5 className={style.transactionStepTxt}>Wait for transaction</h5>
+					</div>
+					<div className={style.transactionLineNext}></div>                                 
+					<div className={style.transactionStep}>
+						<h5 className={style.transactionStepTxt}>Done</h5>
+					</div>
+				</div>
+			  </div>
+			);
+		  }
+		} else {
+		  content = (
+			<div className={style.transactionContainer}>
+				<h3>You must have completed the challenge first.</h3>
+				<p>Please make sure you are connected with the wallet associated with your ArtSense profile</p>
+				<div className={style.challengeBtn} onClick={redirectToChallenge}>
+					<h6>Complete the challenge</h6>
+				</div>
+			</div>
+		  );
+		}
+	  } else {
+		content = null;
+	}
 
 	return (
 		<main className={style.mainContainer}>
@@ -800,20 +913,7 @@ const Home: NextPage = () =>{
 			</section>
 			<section className={style.right}>
 				<Image className={!mintInitiated ? style.imageOE : style.imageOE_small} src="/img/openEdition.gif" width={300} height={300} alt="open edition"/>
-				{mintInitiated ? (
-					challengeCompleted ? (
-						<div className={style.transactionContainer}>
-							<h3>Please accept metamask request</h3>
-							<h3>Once the transaction is completed, you will be redirected, it may take up to a minute or two.</h3>
-						</div>
-					) : (
-						<div className={style.transactionContainer}>
-							<h3>You must have completed the challenge first.</h3>
-							<h3>Please make sure you are connected with the account associated with your ArtSense profile</h3>
-							<a href="https://art-sense.studio/challenge_speedy.php">Take me there</a>
-						</div>
-					)
-				) : null}
+				{ content }
 			</section>
 			
 		</main>
