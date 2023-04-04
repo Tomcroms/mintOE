@@ -644,7 +644,7 @@ const Home: NextPage = () =>{
 	async function handleMintRequest() {
 		try {
 			const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
-			await baseProvider.send("eth_requestAccounts", []);
+			const accounts = await baseProvider.send("eth_requestAccounts", []);
 			const walletAddress = accounts[0];
 		
 			const isAuthorized = await checkQuestDone(walletAddress);
