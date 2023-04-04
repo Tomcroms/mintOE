@@ -652,7 +652,7 @@ const Home: NextPage = () =>{
 				setChallengeCompleted(true);
 				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
 				//changer de réseau
-				switchToPolygon();
+				await switchToPolygon();
 
 				setNetworkIsPolygon(true);
 				const gsnConfig = {
