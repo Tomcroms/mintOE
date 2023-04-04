@@ -651,6 +651,7 @@ const Home: NextPage = () =>{
 				setMintInitiated(true);
 				setChallengeCompleted(true);
 				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
+				await baseProvider.send("eth_requestAccounts", []);
 				//changer de réseau
 				await switchToPolygon();
 
