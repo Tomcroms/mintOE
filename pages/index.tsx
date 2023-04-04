@@ -643,8 +643,7 @@ const Home: NextPage = () =>{
 
 	async function handleMintRequest() {
 		try {
-			const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
-			const accounts = await baseProvider.send("eth_requestAccounts", []);
+			const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 			const walletAddress = accounts[0];
 		
 			const isAuthorized = await checkQuestDone(walletAddress);
@@ -653,8 +652,12 @@ const Home: NextPage = () =>{
 				setChallengeCompleted(true);
 				//changer de réseau
 				await switchToPolygon();
-
 				setNetworkIsPolygon(true);
+
+				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
+				const accounts = await baseProvider.send("eth_requestAccounts", []);
+
+
 				const gsnConfig = {
 					paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
 					// maxFeePerGas: ethers.utils.parseUnits("5", "gwei").toString(),
@@ -671,7 +674,7 @@ const Home: NextPage = () =>{
 		
 				const etherProvider = new ethers.providers.Web3Provider(gsnProvider) ;
 		
-				const signer = await etherProvider.getSigner();
+				const signer = etherProvider.getSigner();
 				setRelayAccepted(true);
 
 				const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
