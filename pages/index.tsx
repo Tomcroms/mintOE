@@ -906,49 +906,50 @@ const Home: NextPage = () =>{
 		content = null;
 	}
 	return (
-		<main className={style.mainContainer}>
+		<main className={style.fullScreen}>
 			{ popUp }
 			{ bgOpaque }
-			<section className={style.left}>
-				<h2>The Key to Speedy&apos;s Mona Lisa Collection</h2>
-				<h4>by Speedy Graphito</h4>
-				<p className={style.pDescription}>Enter the vibrant world of Speedy Graphito, recognised as the French street art pioneer. Own a dynamic animated digital artwork, granting access to his Mona Lisa art collection. Let the NFT be your key to the dynamic universe of Speedy Graphito&apos;s art.</p>
-				<div className={style.blocInfo}>
-					<h3>OPEN EDITION</h3>
-				</div>
-				<div className={style.blocInfo}>
-					<div className={style.info}>
-						<p className={style.pInfo}>Price</p>
-						<h4>Free Aidrop</h4>
+			<section className={style.mainContainer}>
+				<section className={style.left}>
+					<h2>The Key to Speedy&apos;s Mona Lisa Collection</h2>
+					<h4>by Speedy Graphito</h4>
+					<p className={style.pDescription}>Enter the vibrant world of Speedy Graphito, recognised as the French street art pioneer. Own a dynamic animated digital artwork, granting access to his Mona Lisa art collection. Let the NFT be your key to the dynamic universe of Speedy Graphito&apos;s art.</p>
+					<div className={style.blocInfo}>
+						<h3>OPEN EDITION</h3>
 					</div>
-					<div className={style.info}>
-						<p className={style.pInfo}>Total Minted</p>
-						<h4>{totalSupply === null ? "Loading..." : totalSupply}</h4>
+					<div className={style.blocInfo}>
+						<div className={style.info}>
+							<p className={style.pInfo}>Price</p>
+							<h4>Free Aidrop</h4>
+						</div>
+						<div className={style.info}>
+							<p className={style.pInfo}>Total Minted</p>
+							<h4>{totalSupply === null ? "Loading..." : totalSupply}</h4>
+						</div>
 					</div>
-				</div>
-				<div className={style.btnClaim} onClick={tryHandleMintRequest}>
-					<h3>Claim Now</h3>
-				</div>
-				<div className={style.blocTokenInfo}>
-					<div className={style.tokenInfo}>
-						<p className={style.pGrey}>TOKEN STANDARD</p>
-						<p>ERC-1155</p>
+					<div className={style.btnClaim} onClick={tryHandleMintRequest}>
+						<h3>Claim Now</h3>
 					</div>
-					<div className={style.tokenInfo}>
-						<p className={style.pGrey}>BLOCKCHAIN</p>
-						<p>POLYGON</p>
+					<div className={style.blocTokenInfo}>
+						<div className={style.tokenInfo}>
+							<p className={style.pGrey}>TOKEN STANDARD</p>
+							<p>ERC-1155</p>
+						</div>
+						<div className={style.tokenInfo}>
+							<p className={style.pGrey}>BLOCKCHAIN</p>
+							<p>POLYGON</p>
+						</div>
+						<div className={style.tokenInfo}>
+							<p className={style.pGrey}>CONTRACT ADDRESS</p>
+							<p>0xE99...c154f160</p>
+						</div>
 					</div>
-					<div className={style.tokenInfo}>
-						<p className={style.pGrey}>CONTRACT ADDRESS</p>
-						<p>0xE99...c154f160</p>
-					</div>
-				</div>
-			</section>
-			<section className={style.right}>
-				<Image className={!mintInitiated ? style.imageOE : style.imageOE_small} src="/img/openEdition.gif" width={300} height={300} alt="open edition"/>
-				{ content }
-			</section>
-			
+				</section>
+				<section className={style.right}>
+					<Image className={!mintInitiated ? style.imageOE : style.imageOE_small} src="/img/openEdition.gif" width={300} height={300} alt="open edition"/>
+					{ content }
+				</section>
+			</section>		
 		</main>
 	)
 } 
