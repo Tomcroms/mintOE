@@ -650,9 +650,6 @@ const Home: NextPage = () =>{
 			if (isAuthorized) {
 				setMintInitiated(true);
 				setChallengeCompleted(true);
-				//changer de réseau
-				await switchToPolygon();
-				setNetworkIsPolygon(true);
 
 				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
 				const accounts = await baseProvider.send("eth_requestAccounts", []);
@@ -693,7 +690,6 @@ const Home: NextPage = () =>{
 			console.log(error);
 		}
 	}
-
 	async function switchToPolygon(){
 		interface CustomError extends Error {
 			code?: number;
@@ -730,26 +726,23 @@ const Home: NextPage = () =>{
 				console.error("Erreur lors du passage au réseau Polygon:",error);
 			}
 		}
+		checkNetwork();
+		fetchTotalSupply();
 	}
 	function redirectToChallenge(){
 		window.location.assign("https://art-sense.studio/challenge_speedy.php");
 	}
-
-	//récupérer totalSupply()
-	const [totalSupply, setTotalSupply] = useState(null);
-
-	useEffect(() => {
-	  function displayConfettis() {
-		for(let i=0; i<Math.floor(Math.random()*(25-10) + 10); i++){
-			confetti({
-				origin: {
-					x: Math.random() * (0.95 - 0.05) + 0.05,
-					y: Math.random() * (0.9 - 0.2) + 0.2
-				}
-			}); 
+	async function checkNetwork(){
+		const provider = new ethers.providers.Web3Provider(window.ethereum);
+		const network = await provider.getNetwork();
+		if(network.chainId === 137){
+			setNetworkIsPolygon(true);
 		}
-	  }
-	  async function fetchTotalSupply() {
+		else{
+			setNetworkIsPolygon(false);
+		}
+	}
+	async function fetchTotalSupply() {
 		if (typeof window.ethereum !== 'undefined') {
 			try{
 				const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -760,15 +753,51 @@ const Home: NextPage = () =>{
 				console.error(error);
 			}
 		}
-	  }
-	  displayConfettis();
-	  fetchTotalSupply();
+	}
+	//récupérer totalSupply()
+	const [totalSupply, setTotalSupply] = useState(null);
+	const [networkIsPolygon, setNetworkIsPolygon] = useState(true);
+	useEffect(() => {
+		function displayConfettis() {
+			for(let i=0; i<Math.floor(Math.random()*(25-10) + 10); i++){
+				confetti({
+					origin: {
+						x: Math.random() * (0.95 - 0.05) + 0.05,
+						y: Math.random() * (0.9 - 0.2) + 0.2
+					}
+				}); 
+			}
+		}
+		displayConfettis();
+		checkNetwork();
+		fetchTotalSupply();
 	}, []);
 
 	const [mintInitiated, setMintInitiated] = useState(false);
 	const [challengeCompleted, setChallengeCompleted] = useState(false);
-	const [networkIsPolygon, setNetworkIsPolygon] = useState(false);
 	const [relayAccepted, setRelayAccepted] = useState(false);
+	let popUp;
+	let bgOpaque;
+	if(!networkIsPolygon){
+		popUp = (
+			<div className={style.popUp}>
+				<h2>Great news!</h2>
+				<p className={style.pPopUp}>You don&apos;t need to have any token on your wallet to claim the airdrop.</p>
+				<Image className={style.polygonImg} src="/img/polygonImg.jpg" width={200} height={200} alt="polygon"/>
+				<p className={style.pPopUp}>You are not connected to the polygon network.<br/>Please switch to polygon network by clicking on the button below.</p>
+				<div className={style.switchBtn} onClick={switchToPolygon}>
+					<h6>Switch to polygon</h6>
+				</div>
+			</div>
+		);
+		bgOpaque = (
+			<div className={style.bgOpaque}></div>
+		);
+	}else{
+		popUp = null;
+		bgOpaque = null;
+	}
+
 	let content;
 	if (mintInitiated) {
 		if (challengeCompleted) {
@@ -876,9 +905,10 @@ const Home: NextPage = () =>{
 	  } else {
 		content = null;
 	}
-
 	return (
 		<main className={style.mainContainer}>
+			{ popUp }
+			{ bgOpaque }
 			<section className={style.left}>
 				<h2>The Key to Speedy&apos;s Mona Lisa Collection</h2>
 				<h4>by Speedy Graphito</h4>
