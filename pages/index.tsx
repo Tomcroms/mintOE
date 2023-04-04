@@ -5,6 +5,7 @@ import style from "../styles/style.module.css";
 import type { NextPage } from "next";
 import { useState, useEffect } from 'react';
 import confetti from "canvas-confetti";
+import { useRouter } from 'next/router';
 
 
 declare const window: any;
@@ -640,7 +641,6 @@ const Home: NextPage = () =>{
 		const data = await response.json();
 		return data.authorized;
 	}
-
 	async function handleMintRequest() {
 		try {
 			const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -727,7 +727,7 @@ const Home: NextPage = () =>{
 			}
 		}
 		checkNetwork();
-		fetchTotalSupply();
+		window.location.reload();
 	}
 	function redirectToChallenge(){
 		window.location.assign("https://art-sense.studio/challenge_speedy.php");
