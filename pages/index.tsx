@@ -668,17 +668,32 @@ const Home: NextPage = () =>{
 				await gsnProvider.init()
 		
 				const etherProvider = new ethers.providers.Web3Provider(gsnProvider) ;
-		
+				console.log("ethereumProvider created");
+
 				const signer = etherProvider.getSigner();
 				setRelayAccepted(true);
 
 				const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
 		
 				const transaction = await myContract.mintFreeToken();
+				const receipt = await etherProvider.getTransactionReceipt(transaction);
+				console.log(receipt);
 
-				await transaction.wait();
-				//rediriger vers art-sense.studio --> hasMinted dans la bdd
-				window.location.assign("https://art-sense.studio/actions/hasMinted.php");
+				let nftCreated = false;
+				const startTime = Date.now();
+				while (!nftCreated && (Date.now() - startTime) < 90000) {
+					const balance = await myContract.balanceOf(walletAddress, 0);
+					if (balance > 0) {
+						nftCreated=true;
+					}
+					await new Promise(resolve => setTimeout(resolve, 5000));
+					console.log("resolve");
+				}
+				if (nftCreated) {
+					window.location.assign("https://art-sense.studio/actions/hasMinted.php");
+				}else{
+					
+				}
 			}
 			else {
 				setMintInitiated(true);
@@ -774,6 +789,24 @@ const Home: NextPage = () =>{
 	const [mintInitiated, setMintInitiated] = useState(false);
 	const [challengeCompleted, setChallengeCompleted] = useState(false);
 	const [relayAccepted, setRelayAccepted] = useState(false);
+	const [transactionFailed, setTransactionFailed] = useState(false);
+
+	let popUpTransactionFailed;
+	if(transactionFailed){
+		popUpTransactionFailed = (
+			<div className={style.popUp}>
+				<h2>Ooooops...</h2>
+				<p className={style.pPopUp}>The transaction did not go through.</p>
+				<Image className={style.FailedImg} src="/img/connectionFailedImg.png" width={400} height={80} alt="polygon"/>
+				<p className={style.pPopUp}>Please click the button below to reload the page and try again.<br/>If the problem persists, please do not hesitate to contact us by opening a ticket on Discord.</p>
+				<div className={style.switchBtn} onClick={() => window.location.reload()}>
+					<h6>Reload</h6>
+				</div>
+			</div>
+		);
+	}else{
+		popUpTransactionFailed = null;
+	}
 	let popUp;
 	let bgOpaque;
 	if(!networkIsPolygon){
@@ -794,6 +827,7 @@ const Home: NextPage = () =>{
 	}else{
 		popUp = null;
 		bgOpaque = null;
+		fetchTotalSupply();
 	}
 
 	let content = null;
@@ -913,6 +947,7 @@ const Home: NextPage = () =>{
 		<main className={style.fullScreen}>
 			{ popUp }
 			{ bgOpaque }
+			{ popUpTransactionFailed }
 			<section className={style.mainContainer}>
 				<section className={style.left}>
 					<h2>The Key to Speedy&apos;s Mona Lisa Collection</h2>

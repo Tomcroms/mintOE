@@ -45,6 +45,13 @@
     height: auto;
     border-radius: 50%;
 }
+.FailedImg{
+    margin: 50px 0 20px 0;
+    width: 40%;
+    height: auto;
+}
+
+
 .switchBtn{
     padding: 10px 40px;
     margin-top: 45px;
