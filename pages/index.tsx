@@ -796,7 +796,8 @@ const Home: NextPage = () =>{
 		bgOpaque = null;
 	}
 
-	let content;
+	let content = null;
+	let info;
 	if (mintInitiated) {
 		if (challengeCompleted) {
 		  if (networkIsPolygon) {
@@ -828,6 +829,11 @@ const Home: NextPage = () =>{
 							<h5 className={style.transactionStepTxt}>Done</h5>
 						</div>
 					</div>
+				</div>
+			  );
+			  info=(
+				<div className={style.infoTransaction}>
+					<p>Please do not refresh, you will be redirected after the transaction.</p>
 				</div>
 			  );
 			} else {
@@ -946,6 +952,7 @@ const Home: NextPage = () =>{
 				<section className={style.right}>
 					<Image className={!mintInitiated ? style.imageOE : style.imageOE_small} src="/img/openEdition.gif" width={300} height={300} alt="open edition"/>
 					{ content }
+					{ info }
 				</section>
 			</section>		
 		</main>
