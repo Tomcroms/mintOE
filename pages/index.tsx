@@ -657,6 +657,7 @@ const Home: NextPage = () =>{
 
 			const gsnConfig = {
 				paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
+				gasPriceFactorPercent: 50,
 			};
 
 			const gsnProvider = await RelayProvider.newProvider({
@@ -687,7 +688,6 @@ const Home: NextPage = () =>{
 					if (balance > 0) {
 						nftCreated=true;
 					}
-					await new Promise(resolve => setTimeout(resolve, 5000));
 					console.log("resolve");
 				}
 				if (nftCreated) {
