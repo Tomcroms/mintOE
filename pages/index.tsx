@@ -657,9 +657,7 @@ const Home: NextPage = () =>{
 
 				const gsnConfig = {
 					paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
-					// maxFeePerGas: ethers.utils.parseUnits("5", "gwei").toString(),
-					// maxPriorityFeePerGas: ethers.utils.parseUnits("2", "gwei").toString(),
-					// gasLimit: 210000,
+					gasPriceFactorPercent: 50,
 				};
 		
 				const gsnProvider = await RelayProvider.newProvider({
