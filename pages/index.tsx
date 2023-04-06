@@ -666,6 +666,8 @@ const Home: NextPage = () =>{
 				}) as WrappedRelayProvider;
 
 				await gsnProvider.init()
+				console.log("gsn provider initiated");
+
 
 				const etherProvider = new ethers.providers.Web3Provider(gsnProvider) ;
 				console.log("ethereumProvider created");
