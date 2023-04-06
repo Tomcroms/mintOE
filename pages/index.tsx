@@ -659,14 +659,14 @@ const Home: NextPage = () =>{
 					paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
 					gasPriceFactorPercent: 50,
 				};
-		
+
 				const gsnProvider = await RelayProvider.newProvider({
 					provider: baseProvider,
 					config: gsnConfig,
 				}) as WrappedRelayProvider;
-		
+
 				await gsnProvider.init()
-		
+
 				const etherProvider = new ethers.providers.Web3Provider(gsnProvider) ;
 				console.log("ethereumProvider created");
 
@@ -674,7 +674,7 @@ const Home: NextPage = () =>{
 				setRelayAccepted(true);
 
 				const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
-		
+
 				const transaction = await myContract.mintFreeToken();
 				const receipt = await etherProvider.getTransactionReceipt(transaction);
 				console.log(receipt);
@@ -871,34 +871,40 @@ const Home: NextPage = () =>{
 				</div>
 			  );
 			} else {
-			  content = (
-				<div className={style.transactionContainer}>
-					<div className={style.transactionProgress}>
-						<div className={style.transactionStep}>
-							<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
-							<h5 className={style.transactionStepTxt}>Claim your token</h5>
-						</div>
-						<div className={style.transactionLineDone}></div>
-						<div className={style.transactionStep}>
-							<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
-							<h5 className={style.transactionStepTxt}>Switch to polygon network</h5>
-						</div>
-						<div className={style.transactionLineDone}></div>
-						<div className={style.transactionStep}>
-							<Image className={style.stepValidate} src="/img/spinner.gif" width={20} height={20} alt="ok"/>
-							<h5 className={style.transactionStepTxt}>Accept relay request</h5>
-						</div>
-						<div className={style.transactionLineNext}></div>
-						<div className={style.transactionStep}>
-							<h5 className={style.transactionStepTxt}>Wait for transaction</h5>
-						</div>
-						<div className={style.transactionLineNext}></div>                                 
-						<div className={style.transactionStep}>
-							<h5 className={style.transactionStepTxt}>Done</h5>
+			  	content = (
+					<div className={style.transactionContainer}>
+						<div className={style.transactionProgress}>
+							<div className={style.transactionStep}>
+								<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
+								<h5 className={style.transactionStepTxt}>Claim your token</h5>
+							</div>
+							<div className={style.transactionLineDone}></div>
+							<div className={style.transactionStep}>
+								<Image className={style.stepValidate} src="/img/validate.png" width={15} height={11} alt="ok"/>
+								<h5 className={style.transactionStepTxt}>Switch to polygon network</h5>
+							</div>
+							<div className={style.transactionLineDone}></div>
+							<div className={style.transactionStep}>
+								<Image className={style.stepValidate} src="/img/spinner.gif" width={20} height={20} alt="ok"/>
+								<h5 className={style.transactionStepTxt}>Accept relay request</h5>
+							</div>
+							<div className={style.transactionLineNext}></div>
+							<div className={style.transactionStep}>
+								<h5 className={style.transactionStepTxt}>Wait for transaction</h5>
+							</div>
+							<div className={style.transactionLineNext}></div>                                 
+							<div className={style.transactionStep}>
+								<h5 className={style.transactionStepTxt}>Done</h5>
+							</div>
 						</div>
 					</div>
-				</div>
-			  );
+			  	);
+				info=(
+					<div className={style.infoTransaction}>
+						<p>Please wait and accept metamask request.</p>
+						<p>If no Metamask pop-up appears, the relay may be overloaded. Please try again later.</p>
+					</div>
+				);
 			}
 		  } else {
 			content = (
