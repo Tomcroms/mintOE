@@ -620,7 +620,7 @@ const Home: NextPage = () =>{
 				params: request.params ?? []
 			}, callback)
 		}
-	
+
 	}
 	const tryHandleMintRequest = async () => {
 		if(typeof window !== "undefined" && window.ethereum){
@@ -651,22 +651,21 @@ const Home: NextPage = () =>{
 				setMintInitiated(true);
 				setChallengeCompleted(true);
 
-				const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
-				const accounts = await baseProvider.send("eth_requestAccounts", []);
+			const baseProvider = new ethers.providers.Web3Provider(window.ethereum); 
+			const accounts = await baseProvider.send("eth_requestAccounts", []);
 
 
-				const gsnConfig = {
-					paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
-					gasPriceFactorPercent: 50,
-				};
+			const gsnConfig = {
+				paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
+			};
 
-				const gsnProvider = await RelayProvider.newProvider({
-					provider: baseProvider,
-					config: gsnConfig,
-				}) as WrappedRelayProvider;
-				console.log("Initiating gsnProvider...");
-				await gsnProvider.init()
-				console.log("gsn provider initiated");
+			const gsnProvider = await RelayProvider.newProvider({
+				provider: baseProvider,
+				config: gsnConfig,
+			}) as WrappedRelayProvider;
+			console.log("Initiating gsnProvider...");
+			await gsnProvider.init()
+			console.log("gsn provider initiated");
 
 
 				const etherProvider = new ethers.providers.Web3Provider(gsnProvider) ;
