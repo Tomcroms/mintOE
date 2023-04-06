@@ -657,6 +657,7 @@ const Home: NextPage = () =>{
 
 				const gsnConfig = {
 					paymasterAddress: "0xcdD20a800b740492361854110ee0886b308A9a17",
+					gasPriceFactorPercent: 50
 				};
 		
 				const gsnProvider = await RelayProvider.newProvider({
