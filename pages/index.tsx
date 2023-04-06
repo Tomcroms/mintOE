@@ -664,7 +664,7 @@ const Home: NextPage = () =>{
 					provider: baseProvider,
 					config: gsnConfig,
 				}) as WrappedRelayProvider;
-
+				console.log("Initiating gsnProvider...");
 				await gsnProvider.init()
 				console.log("gsn provider initiated");
 
