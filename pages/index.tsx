@@ -677,9 +677,6 @@ const Home: NextPage = () =>{
 				const myContract = new ethers.Contract(ERC1155_contract_address, ERC1155_contract_abi, signer);
 
 				const transaction = await myContract.mintFreeToken();
-				const receipt = await etherProvider.getTransactionReceipt(transaction);
-				console.log(receipt);
-
 				let nftCreated = false;
 				const startTime = Date.now();
 				while (!nftCreated && (Date.now() - startTime) < 90000) {
